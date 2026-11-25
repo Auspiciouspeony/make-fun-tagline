@@ -14,7 +14,23 @@ OUT_DIR = "/output"
 OUT_FILE = "/output/entry.txt"
 
 
+def validate(tagline: str) -> None:
+    if not tagline or not tagline.strip():
+        raise ValueError("tagline must be non-blank")
+    if len(tagline) < 1 or len(tagline) > 100:
+        raise ValueError("tagline must be 1-100 chars")
+    if "\n" in tagline or "\r" in tagline:
+        raise ValueError("tagline must be a single line")
+    if tagline.endswith("\n"):
+        raise ValueError("tagline must not end with a newline")
+
+
 def main() -> int:
+    try:
+        validate(TAGLINE)
+    except ValueError as exc:
+        print(f"invalid tagline: {exc}", file=sys.stderr)
+        return 1
     try:
         os.makedirs(OUT_DIR, exist_ok=True)
     except OSError:
